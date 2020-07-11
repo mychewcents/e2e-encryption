@@ -2,8 +2,9 @@
   "name": "e2e-encryption",
   "version": "0.1.0",
   "description": "Send and receive messages in an End-to-End Encrypted Environment.",
-  "main": "src/index.js",
+  "main": "lib/index.js",
   "scripts": {
+    "build:commonjs": "babel src --out-dir lib",
     "test": "jest"
   },
   "repository": {
@@ -21,5 +22,13 @@
   "bugs": {
     "url": "https://github.com/mychewcents/e2e-encryption/issues"
   },
-  "homepage": "https://github.com/mychewcents/e2e-encryption#readme"
+  "homepage": "https://github.com/mychewcents/e2e-encryption#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.10.4",
+    "@babel/core": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "cross-env": "^7.0.2",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12"
+  }
 }

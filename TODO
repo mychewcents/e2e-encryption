@@ -1,0 +1,8 @@
+- Generate Priv / Pub Key Pair
+- Generate Symmetric Keys for communication
+- Provide Public Key to generate encrypted Symmetric Key
+- Provide Private Key to generate the decrypted Symmetric Key
+- Provide the text and generate the encrypted text
+- Provide the encrypted text and generate the decrypted text
+- Generate a class of the module so that they can store the private key for the session
+- 
