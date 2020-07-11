@@ -1,0 +1,25 @@
+{
+  "name": "e2e-encryption",
+  "version": "0.1.0",
+  "description": "Send and receive messages in an End-to-End Encrypted Environment.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mychewcents/e2e-encryption.git"
+  },
+  "keywords": [
+    "Encryption",
+    "Security",
+    "End-to-End",
+    "Privacy"
+  ],
+  "author": "Akarsh Agarwal",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mychewcents/e2e-encryption/issues"
+  },
+  "homepage": "https://github.com/mychewcents/e2e-encryption#readme"
+}
