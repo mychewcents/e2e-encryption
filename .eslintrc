@@ -8,7 +8,7 @@
   },
   "rules": {
     "implicit-arrow-linebreak": "warn",
-    "operator-linebreak": "warn",
+    "operator-linebreak": "off",
     "class-methods-use-this": "off",
     "linebreak-style": "off"
   }

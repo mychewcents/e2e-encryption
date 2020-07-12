@@ -19,7 +19,12 @@ class E2E {
    * @param {String | undefined} privateKey Private Key of the Host
    */
   constructor(publicKey, privateKey) {
-    if (publicKey !== undefined && privateKey !== undefined) {
+    if (
+      publicKey !== undefined &&
+      publicKey.length &&
+      privateKey !== undefined &&
+      privateKey.length
+    ) {
       this.PublicKey(publicKey);
       this.PrivateKey(privateKey);
     } else {
