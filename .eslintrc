@@ -9,6 +9,7 @@
   "rules": {
     "implicit-arrow-linebreak": "warn",
     "operator-linebreak": "warn",
-    "class-methods-use-this": "off"
+    "class-methods-use-this": "off",
+    "linebreak-style": "off"
   }
 }
