@@ -1,8 +1,12 @@
-- Generate Priv / Pub Key Pair
-- Generate Symmetric Keys for communication
-- Provide Public Key to generate encrypted Symmetric Key
-- Provide Private Key to generate the decrypted Symmetric Key
-- Provide the text and generate the encrypted text
-- Provide the encrypted text and generate the decrypted text
-- Generate a class of the module so that they can store the private key for the session
-- 
+- [X] Constructor => Import Priv/Pub Key
+- [X] Generate Priv / Pub Key Pair (GenerateKeyPair() => { pub, priv })
+- [X] Generate Symmetric Keys for communication (GenerateSymmetricKey(clientPubKey) => symmetricKey)
+- [X] Provide Public Key to generate encrypted Symmetric Key ( EncryptSymmetricKey(clientPubKey) => { rawSymmetricKey, encSymmetricKey } )
+- [X] Provide Private Key to generate the decrypted Symmetric Key (DecryptSymmetricKey(encSymmetricKey) => rawSymmetricKey ) 
+- [X] Provide the text and generate the encrypted text (Encrypt(plaintext) => cipherText)
+- [X] Provide the encrypted text and generate the decrypted text (Decrypt(cipherText, rawSymmemtricKey) => plainText)
+
+Variables in the class:
+
+- Public Key
+- Private Key

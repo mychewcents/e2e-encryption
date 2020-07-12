@@ -5,5 +5,10 @@
     "browser": true,
     "node": true,
     "jest": true
+  },
+  "rules": {
+    "implicit-arrow-linebreak": "warn",
+    "operator-linebreak": "warn",
+    "class-methods-use-this": "off"
   }
 }

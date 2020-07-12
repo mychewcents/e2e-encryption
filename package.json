@@ -48,10 +48,5 @@
     "rimraf": "^3.0.2",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12"
-  },
-  "dependencies": {
-    "crypto": "^1.0.1",
-    "crypto-js": "^4.0.0",
-    "elliptic": "^6.5.3"
   }
 }
