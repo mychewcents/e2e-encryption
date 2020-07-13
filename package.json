@@ -22,7 +22,14 @@
     "Encryption",
     "Security",
     "End-to-End",
-    "Privacy"
+    "Privacy",
+    "tweetnacl",
+    "E2E",
+    "Decryption",
+    "PKI",
+    "Public/Private",
+    "Symmetric Keys",
+    "Asymmetric Keys"
   ],
   "author": "Akarsh Agarwal",
   "license": "MIT",
