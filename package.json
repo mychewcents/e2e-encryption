@@ -2,15 +2,14 @@
   "name": "e2e-encryption",
   "version": "0.1.0",
   "description": "Send and receive messages in an End-to-End Encrypted Environment.",
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "scripts": {
     "build:commonjs": "babel src --out-dir lib",
     "build:umd": "cross-env FILE_NAME=e2e webpack",
     "build:umd:min": "cross-env NODE_ENV=production npm run build:umd",
     "build": "npm run clean && npm run build:commonjs && npm run build:umd && npm run build:umd:min",
     "clean": "rimraf lib dist",
-    "lint": "eslint src --ext .js .jsx",
-    "posttest": "npm run lint",
+    "lint": "eslint src --ext .js",
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
     "coverage": "npm test -- --coverage"
@@ -50,8 +49,8 @@
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
-    "crypto": "^1.0.1",
-    "crypto-js": "^4.0.0",
-    "elliptic": "^6.5.3"
+    "byte-base64": "^1.0.2",
+    "tweetnacl": "^1.0.3",
+    "tweetnacl-util": "^0.15.1"
   }
 }
