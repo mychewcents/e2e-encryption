@@ -1,13 +1,38 @@
 /// <reference types="node" />
 
 declare module 'e2e-encryption' {
+  type Options = {
+    useSameSymmetricKeyPerClient: boolean;
+  };
+
+  type SymmetricKeyObject = {
+    raw: string;
+    enc: string;
+  };
+
+  type SymmetricKeyEntryMap = {
+    [publicKey: string]: SymmetricKeyObject;
+  };
+
   class E2E {
     publicKey: string;
     privateKey: string;
+    readonly SymmetricKeys: SymmetricKeyEntryMap;
+    readonly options: Options;
 
-    constructor(publicKey: string | undefined, privateKey: string | undefined);
-    Encrypt: (plainText: Object, clientPublicKey: string) => string;
-    Decrypt: (cipherText: string, publicKey: string) => string;
+    constructor(publicKey: string, privateKey: string, options: Options);
+
+    Encrypt: (
+      plainText: Object,
+      clientPublicKey: string,
+      options: Options,
+    ) => string;
+
+    Decrypt: (
+      cipherText: string,
+      publicKey: string,
+      options: Options,
+    ) => Object;
   }
 
   export = E2E;

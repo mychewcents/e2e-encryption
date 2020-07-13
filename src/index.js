@@ -15,10 +15,11 @@ class E2E {
    * If the public/private key pair is not present, the constructor
    * would create a new key pair for the user.
    *
-   * @param {String | undefined} publicKey Public Key of the Host
-   * @param {String | undefined} privateKey Private Key of the Host
+   * @param {String} publicKey Public Key of the Host
+   * @param {String} privateKey Private Key of the Host
+   * @param {String} options Options to configure the package
    */
-  constructor(publicKey, privateKey) {
+  constructor(publicKey, privateKey, options) {
     if (
       publicKey !== undefined &&
       publicKey.length &&
@@ -30,23 +31,39 @@ class E2E {
     } else {
       this.GenerateNewKeys();
     }
+
+    if (options) {
+      this.options = options;
+    }
   }
 
   /**
-   * @param {Object} plaintext Object to be encrypted
-   * @param {String} clientPublicKey Client's PEM Encoded Public Key
+   * @param {Object} plainText JSON Object to be encrypted
+   * @param {String} receiverPubKey Reveiver's Public Key in Base64
+   * @param {Object} options Override the instance's properties
    */
-  Encrypt(plaintext, clientPublicKey) {
-    const newSymmetricKey = this.EncryptSymmetricKey(clientPublicKey);
+  Encrypt(plainText, receiverPubKey, options) {
+    let symmetricKey;
+
+    if (
+      !this.SymmetricKeys[receiverPubKey] ||
+      (this.options && !this.options.useSameSymmetricKeyPerClient) ||
+      (options && !options.useSameSymmetricKeyPerClient)
+    ) {
+      symmetricKey = this.EncryptSymmetricKey(receiverPubKey);
+      this.SymmetricKeys[receiverPubKey] = symmetricKey;
+    } else {
+      symmetricKey = this.SymmetricKeys[receiverPubKey];
+    }
 
     const nonce = newNonceS();
-    const keyUint8Array = decodeBase64(newSymmetricKey.raw);
+    const keyUint8Array = decodeBase64(symmetricKey.raw);
 
     if (typeof plaintext !== 'object') {
       throw new Error('Only JSON object accepted as an input.');
     }
 
-    const messageUint8 = decodeUTF8(JSON.stringify(plaintext));
+    const messageUint8 = decodeUTF8(JSON.stringify(plainText));
     const newBox = secretbox(messageUint8, nonce, keyUint8Array);
 
     const fullMessage = new Uint8Array(nonce.length + newBox.length);
@@ -55,24 +72,36 @@ class E2E {
 
     const fullMessageAsBase64 = encodeBase64(fullMessage);
 
-    return `${fullMessageAsBase64}.${newSymmetricKey.enc}`;
+    return `${fullMessageAsBase64}.${symmetricKey.enc}`;
   }
 
   /**
    * Decrypt the payload received
    *
    * @param {String} cipherText Encrypted Payload
-   * @param {String} publicKey Sender's Public Key
+   * @param {String} senderPublicKey Sender's Public Key
+   * @param {Object} options Override the instance's properties
    */
-  Decrypt(cipherText, publicKey) {
+  Decrypt(cipherText, senderPublicKey, options) {
     const dataParts = cipherText.split('.');
     if (dataParts.length !== 2) {
       throw new Error('Payload is corrupted.');
     }
 
-    const decryptedSymKey = this.DecryptSymmetricKey(dataParts[1], publicKey);
+    let symmetricKey;
 
-    const keyUint8Array = decodeBase64(decryptedSymKey);
+    if (
+      !this.SymmetricKeys[senderPublicKey] ||
+      (this.options && !this.options.useSameSymmetricKeyPerClient) ||
+      (options && !options.useSameSymmetricKeyPerClient)
+    ) {
+      symmetricKey = this.DecryptSymmetricKey(dataParts[1], senderPublicKey);
+      this.SymmetricKeys[senderPublicKey] = symmetricKey;
+    } else {
+      symmetricKey = this.SymmetricKeys[senderPublicKey];
+    }
+
+    const keyUint8Array = decodeBase64(symmetricKey);
     const messageWithNonceAsUint8Array = decodeBase64(dataParts[0]);
 
     const nonce = messageWithNonceAsUint8Array.slice(0, secretbox.nonceLength);
@@ -95,7 +124,7 @@ class E2E {
    * Generates a new Symmetric Key for encryption and
    * encrypted Symmetric Key for Transmission.
    *
-   * @param {String} publicKey Client's public key
+   * @param {String} publicKey Receiver's public key
    */
   EncryptSymmetricKey(publicKey) {
     const symmetricKey = encodeBase64(randomBytes(secretbox.keyLength));
@@ -148,7 +177,7 @@ class E2E {
   /**
    * Generate the shared encryption key for the Symmetric keys
    *
-   * @param {String} pub Client's Public Key
+   * @param {String} pub Receiver's Public Key
    */
   GetShared(publicKey) {
     const publicKeyAsUint8Array = decodeBase64(publicKey);
@@ -195,6 +224,13 @@ class E2E {
    */
   get PublicKey() {
     return this.publicKey;
+  }
+
+  /**
+   * Get the Symmetric Keys Dictionary
+   */
+  get SymmmetricKey() {
+    return this.SymmetricKeys;
   }
 }
 
