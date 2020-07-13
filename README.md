@@ -110,16 +110,13 @@ Install NPM modules needed for development:
 
 To build minified versions:
 
-    $ npm run build
-
-Tests use minified version, so make sure to rebuild it every time you change
-`src/index.js`.
+    $ npm build
 
 ### Testing
 
 To run tests:
 
-    $ npm run test
+    $ npm test
 
 ## In Progress Tasks
 
