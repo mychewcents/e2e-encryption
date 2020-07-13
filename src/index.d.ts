@@ -1,7 +1,7 @@
 /// <reference types="node" />
 
 declare module 'e2e-encryption' {
-  type Options = {
+  export type Options = {
     useSameKeyPerClient: boolean;
   };
 
@@ -10,7 +10,7 @@ declare module 'e2e-encryption' {
     enc: string;
   };
 
-  type SymmetricKeyEntryMap = {
+  export type SymmetricKeyEntryMap = {
     [publicKey: string]: SymmetricKeyObject;
   };
 
@@ -35,5 +35,5 @@ declare module 'e2e-encryption' {
     ) => Object;
   }
 
-  export = E2E;
+  export default E2E;
 }
