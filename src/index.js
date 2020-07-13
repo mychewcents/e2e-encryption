@@ -26,15 +26,21 @@ class E2E {
       privateKey !== undefined &&
       privateKey.length
     ) {
-      this.PublicKey(publicKey);
-      this.PrivateKey(privateKey);
+      this.publicKey = publicKey;
+      this.privateKey = privateKey;
     } else {
       this.GenerateNewKeys();
     }
 
-    if (options) {
+    if (Object.keys(options).length) {
       this.options = options;
+    } else {
+      this.options = {
+        useSameKeyPerClient: false,
+      };
     }
+
+    this.SymmetricKeys = {};
   }
 
   /**
@@ -45,13 +51,16 @@ class E2E {
   Encrypt(plainText, receiverPubKey, options) {
     let symmetricKey;
 
-    if (
-      !this.SymmetricKeys[receiverPubKey] ||
-      (this.options && !this.options.useSameSymmetricKeyPerClient) ||
-      (options && !options.useSameSymmetricKeyPerClient)
-    ) {
+    const useSameKey =
+      options.useSameKeyPerClient !== undefined
+        ? options.useSameKeyPerClient
+        : this.options.useSameKeyPerClient;
+
+    if (!this.SymmetricKeys[receiverPubKey] || !useSameKey) {
       symmetricKey = this.EncryptSymmetricKey(receiverPubKey);
-      this.SymmetricKeys[receiverPubKey] = symmetricKey;
+      if (useSameKey) {
+        this.SymmetricKeys[receiverPubKey] = symmetricKey;
+      }
     } else {
       symmetricKey = this.SymmetricKeys[receiverPubKey];
     }
@@ -59,8 +68,8 @@ class E2E {
     const nonce = newNonceS();
     const keyUint8Array = decodeBase64(symmetricKey.raw);
 
-    if (typeof plaintext !== 'object') {
-      throw new Error('Only JSON object accepted as an input.');
+    if (typeof plainText !== 'object') {
+      throw new Error('Only JSON object accepted as an input');
     }
 
     const messageUint8 = decodeUTF8(JSON.stringify(plainText));
@@ -85,18 +94,21 @@ class E2E {
   Decrypt(cipherText, senderPublicKey, options) {
     const dataParts = cipherText.split('.');
     if (dataParts.length !== 2) {
-      throw new Error('Payload is corrupted.');
+      throw new Error('Payload is corrupted');
     }
 
     let symmetricKey;
 
-    if (
-      !this.SymmetricKeys[senderPublicKey] ||
-      (this.options && !this.options.useSameSymmetricKeyPerClient) ||
-      (options && !options.useSameSymmetricKeyPerClient)
-    ) {
+    const useSameKey =
+      options.useSameKeyPerClient !== undefined
+        ? options.useSameKeyPerClient
+        : this.options.useSameKeyPerClient;
+
+    if (!this.SymmetricKeys[senderPublicKey] || !useSameKey) {
       symmetricKey = this.DecryptSymmetricKey(dataParts[1], senderPublicKey);
-      this.SymmetricKeys[senderPublicKey] = symmetricKey;
+      if (useSameKey) {
+        this.SymmetricKeys[senderPublicKey] = symmetricKey;
+      }
     } else {
       symmetricKey = this.SymmetricKeys[senderPublicKey];
     }
@@ -166,7 +178,7 @@ class E2E {
     const decrypted = box.open.after(message, nonce, privateKeyAsUint8Array);
 
     if (!decrypted) {
-      throw new Error('Could not decrypt the key.');
+      throw new Error('Could not decrypt the key');
     }
 
     const jsonObject = JSON.parse(encodeUTF8(decrypted));
@@ -196,41 +208,6 @@ class E2E {
 
     this.publicKey = encodeBase64(newKey.publicKey);
     this.privateKey = encodeBase64(newKey.secretKey);
-  }
-
-  /**
-   * @param {String} privateKey Base64 Private Key
-   */
-  set PrivateKey(privateKey) {
-    this.privateKey = privateKey;
-  }
-
-  /**
-   * @param {String} publicKey Base64 Public Key
-   */
-  set PublicKey(publicKey) {
-    this.publicKey = publicKey;
-  }
-
-  /**
-   * Get the Private Key of the object
-   */
-  get PrivateKey() {
-    return this.privateKey;
-  }
-
-  /**
-   * Get the Public Key of the object
-   */
-  get PublicKey() {
-    return this.publicKey;
-  }
-
-  /**
-   * Get the Symmetric Keys Dictionary
-   */
-  get SymmmetricKey() {
-    return this.SymmetricKeys;
   }
 }
 

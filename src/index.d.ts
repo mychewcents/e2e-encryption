@@ -2,7 +2,7 @@
 
 declare module 'e2e-encryption' {
   type Options = {
-    useSameSymmetricKeyPerClient: boolean;
+    useSameKeyPerClient: boolean;
   };
 
   type SymmetricKeyObject = {

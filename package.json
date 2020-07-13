@@ -9,8 +9,7 @@
     "build:umd:min": "cross-env NODE_ENV=production npm run build:umd",
     "build": "npm run clean && npm run build:commonjs && npm run build:umd && npm run build:umd:min",
     "clean": "rimraf lib dist",
-    "lint": "eslint src --ext .js .jsx",
-    "posttest": "npm run lint",
+    "lint": "eslint src --ext .js",
     "prepublishOnly": "npm test && npm run build",
     "test": "jest",
     "coverage": "npm test -- --coverage"
